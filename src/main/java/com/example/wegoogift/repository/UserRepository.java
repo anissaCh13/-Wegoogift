@@ -1,6 +1,6 @@
 package com.example.wegoogift.repository;
 
-import com.example.wegoogift.entity.UserEntity;
+import com.example.wegoogift.model.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 

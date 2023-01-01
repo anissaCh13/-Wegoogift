@@ -1,4 +1,4 @@
-package com.example.wegoogift.dto;
+package com.example.wegoogift.model.dto;
 
 import java.time.LocalDateTime;
 
@@ -41,6 +41,12 @@ public class DepositDTO {
     }
 
     public void setDepositType(String depositType) {
+        this.depositType = depositType;
+    }
+
+    public DepositDTO(Double amount, LocalDateTime beginDate, String depositType) {
+        this.amount = amount;
+        this.beginDate = beginDate;
         this.depositType = depositType;
     }
 }

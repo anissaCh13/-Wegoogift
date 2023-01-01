@@ -1,4 +1,4 @@
-package com.example.wegoogift.entity;
+package com.example.wegoogift.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -63,11 +63,11 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
-    public List<DepositEntity> getGiftDeposits() {
+    public List<DepositEntity> getDepositEntities() {
         return depositEntities;
     }
 
-    public void setGiftDeposits(List<DepositEntity> depositEntities) {
+    public void setDepositEntities(List<DepositEntity> depositEntities) {
         this.depositEntities = depositEntities;
     }
 

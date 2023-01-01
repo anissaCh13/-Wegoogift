@@ -1,4 +1,4 @@
-package com.example.wegoogift.entity;
+package com.example.wegoogift.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -23,7 +23,7 @@ public class CompanyEntity {
     @Column(name="balance")
     private Double balance;
 
-    @OneToMany(mappedBy = "companie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<DepositEntity> depositEntities;
 
@@ -55,12 +55,12 @@ public class CompanyEntity {
         this.balance = balance;
     }
 
-    public List<DepositEntity> getGiftDeposits() {
+    public List<DepositEntity> getDepositEntities() {
         return depositEntities;
     }
 
-    public void setGiftDeposits(List<DepositEntity> user) {
-        this.depositEntities = user;
+    public void setDepositEntities(List<DepositEntity> depositEntities) {
+        this.depositEntities = depositEntities;
     }
 
     public List<UserEntity> getUsers() {

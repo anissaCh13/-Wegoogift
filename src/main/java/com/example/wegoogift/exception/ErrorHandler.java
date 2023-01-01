@@ -26,4 +26,10 @@ public class ErrorHandler {
     public ApiErrorResponse handleCompanyBalanceError(CompanyBalanceError ex){
         return new ApiErrorResponse(403, "Company balance can't allow this gift.");
     }
+
+    @ExceptionHandler(UserOutOfCompany.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiErrorResponse handleUserOutOfCompany(UserOutOfCompany ex){
+        return new ApiErrorResponse(403, "User is not part of this company.");
+    }
 }

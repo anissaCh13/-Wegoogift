@@ -1,8 +1,8 @@
-package com.example.wegoogift.dto;
+package com.example.wegoogift.model.dto;
 
 import java.time.LocalDateTime;
 
-public record GiftDTOBody(Long userId,
+public record DepositBody(Long userId,
                           Long companieId,
                           Double amount,
                           LocalDateTime beginDate,

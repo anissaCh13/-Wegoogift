@@ -1,4 +1,4 @@
-package com.example.wegoogift.dto;
+package com.example.wegoogift.model.dto;
 
 public record UserBalance(Double giftBalance, Double mealBalance) {
 }

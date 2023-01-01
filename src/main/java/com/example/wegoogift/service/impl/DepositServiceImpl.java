@@ -1,59 +1,78 @@
 package com.example.wegoogift.service.impl;
 
-import com.example.wegoogift.dto.DepositDTO;
-import com.example.wegoogift.entity.CompanyEntity;
-import com.example.wegoogift.entity.UserEntity;
-import com.example.wegoogift.entity.DepositEntity;
+import com.example.wegoogift.exception.UserOutOfCompany;
+import com.example.wegoogift.mapper.DepositMapper;
+import com.example.wegoogift.model.dto.*;
+import com.example.wegoogift.model.entity.CompanyEntity;
+import com.example.wegoogift.model.entity.UserEntity;
+import com.example.wegoogift.model.entity.DepositEntity;
 import com.example.wegoogift.exception.CompanieNotFound;
 import com.example.wegoogift.exception.CompanyBalanceError;
 import com.example.wegoogift.exception.UserNotFound;
+import com.example.wegoogift.model.enums.DepositType;
 import com.example.wegoogift.repository.CompaniesRepository;
 import com.example.wegoogift.repository.UserRepository;
 import com.example.wegoogift.repository.DepositRepository;
 import com.example.wegoogift.service.DepositService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepositServiceImpl implements DepositService {
 
     CompaniesRepository companiesRepository;
+
     UserRepository userRepository;
 
     DepositRepository depositRepository;
 
-    public DepositServiceImpl(CompaniesRepository companiesRepository, UserRepository userRepository, DepositRepository depositRepository) {
+    DepositMapper depositMapper;
+
+    public DepositServiceImpl(CompaniesRepository companiesRepository,
+                              UserRepository userRepository,
+                              DepositRepository depositRepository,
+                              DepositMapper depositMapper){
         this.companiesRepository = companiesRepository;
         this.userRepository = userRepository;
         this.depositRepository = depositRepository;
+        this.depositMapper = depositMapper;
     }
 
     @Override
-    public List<CompanyEntity> getAllCompanie() {
-        return (List<CompanyEntity>) companiesRepository.findAll();
-    }
-
-    @Override
-    public DepositEntity destributeDeposite(Long companieId, Long userId, DepositDTO depositDTO) {
-        CompanyEntity companyEntity = companiesRepository.findById(companieId)
-                .orElseThrow(() ->
-                        new CompanieNotFound(companieId.toString()));
-        UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() ->
-                new UserNotFound(userId.toString()));
-        if (companyEntity.getBalance().compareTo(depositDTO.getAmount())<0){
+    public DepositDTO destributeDeposite(DepositBody depositBody) {
+        UserEntity userEntity = getUser(depositBody);
+        CompanyEntity companyEntity = getCompany(depositBody);
+        checkUserInCompany(depositBody, userEntity);
+        if (companyEntity.getBalance().compareTo(depositBody.amount()) < 0) {
             throw new CompanyBalanceError();
         }
-        companyEntity.setBalance(companyEntity.getBalance() - depositDTO.getAmount());
-        DepositEntity depositEntity = new DepositEntity();
-        depositEntity.setAmout(depositDTO.getAmount());
-        depositEntity.setCompanie(companyEntity);
-        depositEntity.setUser(userEntity);
-        depositEntity.setBeginDate(depositDTO.getBeginDate());
-        depositEntity.setEndDate(depositDTO.getEndDate());
-        depositEntity.setDepositType(depositDTO.getDepositType());
 
-        return depositRepository.save(depositEntity);
+        DepositDTO depositDTO = DepositType.GIFT.name().equals(depositBody.depositType()) ?
+                new GiftDepositDTO(depositBody.amount(), depositBody.beginDate(), depositBody.depositType())
+                : new MealDepositDTO(depositBody.amount(), depositBody.beginDate(), depositBody.depositType());
+        companyEntity.setBalance(companyEntity.getBalance() - depositBody.amount());
+
+        DepositEntity depositEntity = depositMapper.toDepositEntity(depositDTO, companyEntity, userEntity);
+
+        return depositMapper.toDepositDTO(depositRepository.save(depositEntity));
+    }
+
+    private void checkUserInCompany(DepositBody depositBody, UserEntity userEntity) {
+        Optional<CompanyEntity> companyEntityOptional = Optional.ofNullable(companiesRepository.findByUsersAndId(userEntity, depositBody.companieId()));
+        companyEntityOptional.orElseThrow(()-> new UserOutOfCompany(userEntity.getFirstName()));
+    }
+
+    private CompanyEntity getCompany(DepositBody depositBody) {
+        return companiesRepository.findById(depositBody.companieId())
+                .orElseThrow(() ->
+                        new CompanieNotFound(depositBody.companieId().toString()));
+    }
+
+    private UserEntity getUser(DepositBody depositBody) {
+        UserEntity userEntity = userRepository.findById(depositBody.userId())
+                .orElseThrow(() ->
+                        new UserNotFound(depositBody.userId().toString()));
+        return userEntity;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.wegoogift.entity;
+package com.example.wegoogift.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -6,15 +6,16 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="GIFT_DEPOSIT")
+@Table(name="DEPOSIT")
 public class DepositEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEPOSIT_SEQ")
+    @SequenceGenerator(name = "DEPOSIT_SEQ", sequenceName = "DEPOSIT_SEQ", allocationSize = 1)
     @Column(unique = true, nullable = false)
-    private Long giftDepositId;
+    private Long id;
     @Column
-    private Double amout;
+    private Double amount;
 
     @Column
     private LocalDateTime beginDate;
@@ -30,29 +31,29 @@ public class DepositEntity {
     @JsonBackReference
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="companie_id", nullable = false)
     @JsonBackReference
-    private CompanyEntity companie;
+    private CompanyEntity company;
 
     public DepositEntity() {
 
     }
 
-    public Long getGiftDepositId() {
-        return giftDepositId;
+    public Long getId() {
+        return id;
     }
 
-    public void setGiftDepositId(Long giftDepositId) {
-        this.giftDepositId = giftDepositId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Double getAmout() {
-        return amout;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setAmout(Double amout) {
-        this.amout = amout;
+    public void setAmount(Double amout) {
+        this.amount = amout;
     }
 
     public LocalDateTime getBeginDate() {
@@ -79,12 +80,12 @@ public class DepositEntity {
         this.user = userEntity;
     }
 
-    public CompanyEntity getCompanie() {
-        return companie;
+    public CompanyEntity getCompany() {
+        return company;
     }
 
-    public void setCompanie(CompanyEntity companie) {
-        this.companie = companie;
+    public void setCompany(CompanyEntity companie) {
+        this.company = companie;
     }
 
     public String getDepositType() {

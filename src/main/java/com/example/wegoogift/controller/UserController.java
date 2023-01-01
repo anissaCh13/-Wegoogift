@@ -1,6 +1,6 @@
 package com.example.wegoogift.controller;
 
-import com.example.wegoogift.dto.UserBalance;
+import com.example.wegoogift.model.dto.UserBalance;
 import com.example.wegoogift.service.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

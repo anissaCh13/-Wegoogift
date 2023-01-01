@@ -1,13 +1,9 @@
 package com.example.wegoogift.service;
 
-import com.example.wegoogift.dto.DepositDTO;
-import com.example.wegoogift.entity.CompanyEntity;
-import com.example.wegoogift.entity.DepositEntity;
-
-import java.util.List;
+import com.example.wegoogift.model.dto.DepositDTO;
+import com.example.wegoogift.model.dto.DepositBody;
 
 public interface DepositService {
-    List<CompanyEntity> getAllCompanie();
 
-    DepositEntity destributeDeposite(Long companieId, Long userId, DepositDTO depositDTO);
+    DepositDTO destributeDeposite(DepositBody depositBody);
 }
