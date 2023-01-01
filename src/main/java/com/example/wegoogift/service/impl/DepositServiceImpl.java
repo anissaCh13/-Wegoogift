@@ -48,14 +48,18 @@ public class DepositServiceImpl implements DepositService {
             throw new CompanyBalanceError();
         }
 
-        DepositDTO depositDTO = DepositType.GIFT.name().equals(depositBody.depositType()) ?
-                new GiftDepositDTO(depositBody.amount(), depositBody.beginDate(), depositBody.depositType())
-                : new MealDepositDTO(depositBody.amount(), depositBody.beginDate(), depositBody.depositType());
+        DepositDTO depositDTO = initiatDepositDTO(depositBody);
         companyEntity.setBalance(companyEntity.getBalance() - depositBody.amount());
 
         DepositEntity depositEntity = depositMapper.toDepositEntity(depositDTO, companyEntity, userEntity);
 
         return depositMapper.toDepositDTO(depositRepository.save(depositEntity));
+    }
+
+    private static DepositDTO initiatDepositDTO(DepositBody depositBody) {
+        return DepositType.GIFT.name().equals(depositBody.depositType().name()) ?
+                new GiftDepositDTO(depositBody.amount(), depositBody.beginDate(), depositBody.depositType().name())
+                : new MealDepositDTO(depositBody.amount(), depositBody.beginDate(), depositBody.depositType().name());
     }
 
     private void checkUserInCompany(DepositBody depositBody, UserEntity userEntity) {
