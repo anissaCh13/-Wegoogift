@@ -84,8 +84,8 @@ public class DepositEntity {
         return company;
     }
 
-    public void setCompany(CompanyEntity companie) {
-        this.company = companie;
+    public void setCompany(CompanyEntity company) {
+        this.company = company;
     }
 
     public String getDepositType() {
