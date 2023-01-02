@@ -24,7 +24,7 @@ public class ErrorHandler {
     @ExceptionHandler(CompanyBalanceError.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiErrorResponse handleCompanyBalanceError(CompanyBalanceError ex){
-        return new ApiErrorResponse(403, "Company balance can't allow this gift.");
+        return new ApiErrorResponse(403, "Company balance can't allow this deposit.");
     }
 
     @ExceptionHandler(UserOutOfCompany.class)

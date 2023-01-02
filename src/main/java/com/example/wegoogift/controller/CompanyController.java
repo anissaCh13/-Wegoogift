@@ -12,13 +12,13 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(value = "/companie")
-public class CompanieController {
+@RequestMapping(value = "/company")
+public class CompanyController {
 
     private final CompanyService companyService;
 
 
-    public CompanieController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
     }
 
